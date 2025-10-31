@@ -49,8 +49,14 @@ def get_embedding(text, model="text-embedding-3-small", retries=6):
             wait_time = 2 ** i  # 1s, 2s, 4s...
             print(f"Rate limit hit, retrying in {wait_time}s...")
             time.sleep(wait_time)
+        except TypeError as e:
+            st.error("A type error occurred while computing match percentage.")
+            st.write(f"Details: {e}")
+        except Exception as e:
+            st.error("An unexpected error occurred.")
+            st.write(f"Details: {e}")
 
-    raise RateLimitError("Failed to get embedding after several retries")
+    raise Exception("Failed to get embedding after several retries")
 
 def cosine_similarity(vec1, vec2):
     """Calculate cosine similarity between two vectors."""
