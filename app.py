@@ -113,25 +113,29 @@ else:
 # ----- Reach Out Section - Tools -----
 st.header("Step 4: Recruiter Communication & Salary Insights")
 
-if st.button("Generate Recruiter Message"):
-    with st.spinner("Creating recruiter message..."):
-        recruiter_msg = generate_recruiter_message(job_description)
-    st.text_area("LinkedIn Message", recruiter_msg, height=150)
+if resume_text and job_description:
+    if st.button("Generate Recruiter Message"):
+        with st.spinner("Creating recruiter message..."):
+            recruiter_msg = generate_recruiter_message(job_description)
+        st.text_area("LinkedIn Message", recruiter_msg, height=150)
 
 
-if st.button("Generate Cold Email"):
-    with st.spinner("Writing email..."):
-        cold_email = generate_cold_email(job_description)
-    st.text_area("Cold Email Template", cold_email, height=250)
+    if st.button("Generate Cold Email"):
+        with st.spinner("Writing email..."):
+            cold_email = generate_cold_email(job_description)
+        st.text_area("Cold Email Template", cold_email, height=250)
 
 
-if st.button("Suggest People to Contact"):
-    with st.spinner("Finding roles..."):
-        titles = (", ".join(suggest_contact_titles(job_description)))
-    st.text_area("Recommended Contacts", titles, height=150)
+    if st.button("Suggest People to Contact"):
+        with st.spinner("Finding roles..."):
+            titles = (", ".join(suggest_contact_titles(job_description)))
+        st.text_area("Recommended Contacts", titles, height=150)
 
 
-if st.button("Estimate Salary Range"):
-    with st.spinner("Estimating salary..."):
-        salary = estimate_salary(job_description)
-    st.success(f"Estimated Salary: {salary}")
+    if st.button("Estimate Salary Range"):
+        with st.spinner("Estimating salary..."):
+            salary = estimate_salary(job_description)
+        st.success(f"Estimated Salary: {salary}")
+
+else:
+    st.info("Please upload a resume and paste a job description above to generate results.")
