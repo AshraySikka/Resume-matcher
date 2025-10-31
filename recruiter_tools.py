@@ -1,6 +1,9 @@
-import openai
+from openai import OpenAI
+import streamlit as st
 import re
-openai.api_key = "YOUR_OPENAI_API_KEY"
+
+# Initialize OpenAI Client
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 def extract_job_info(jd_text):
     """Extract job title and company name heuristically from a job description."""
