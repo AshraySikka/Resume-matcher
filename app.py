@@ -18,6 +18,28 @@ from recruiter_tools import (
 st.set_page_config(page_title="Resume Editor", layout="wide")
 st.title("JobMatch - Resume & Job Description Analyzer")
 
+# Defining a function for downloading the edited resume as a pdf
+def download_resume_pdf(resume_text):
+    buffer = BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    textobject = c.beginText(40, 750)
+    for line in resume_text.split('\n'):
+        textobject.textLine(line)
+    c.drawText(textobject)
+    c.showPage()
+    c.save()
+    buffer.seek(0)
+    return buffer
+
+# Defining a function for downloading the edited resume as word doc
+def download_resume_docx(resume_text):
+    doc = Document()
+    doc.add_paragraph(resume_text)
+    buffer = BytesIO()
+    doc.save(buffer)
+    buffer.seek(0)
+    return buffer
+
 # ----- Resume Upload or Paste -----
 st.header("Step 1: Upload or Paste Your Resume")
 
@@ -47,10 +69,8 @@ if job_description.strip(): # Only parse if text exists
 else:
     job_description = ""
 
-# ----- Placeholder for future outputs -----
+# ----- Matching & Editing the Resume -----
 st.header("Step 3: Match Results")
-st.info("Match percentage, edited resume, recruiter message, etc. will appear here after Phase 2+")
-
 
 # Only calculate if both inputs exist
 # Adding a button to calculate the percentage match
@@ -67,72 +87,51 @@ if resume_text and job_description:
         st.success("Edited Resume Ready!")
         st.text_area("Edited Resume Preview", edited_resume, height=300)
 
-# Defining a function for downloading the edited resume as word doc
-def download_resume_docx(resume_text):
-    doc = Document()
-    doc.add_paragraph(resume_text)
-    buffer = BytesIO()
-    doc.save(buffer)
-    buffer.seek(0)
-    return buffer
+        # Streamlit download button for word doc
+        if 'edited_resume' in locals():
+            docx_file = download_resume_docx(edited_resume)
+            st.download_button(
+                label="Download Edited Resume (.docx)",
+                data=docx_file,
+                file_name="Edited_Resume.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            )
 
-# Streamlit download button
-if 'edited_resume' in locals():
-    docx_file = download_resume_docx(edited_resume)
-    st.download_button(
-        label="Download Edited Resume (.docx)",
-        data=docx_file,
-        file_name="Edited_Resume.docx",
-        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    )
+        # Streamlit download button for pdf
+        if 'edited_resume' in locals():
+            pdf_file = download_resume_pdf(edited_resume)
+            st.download_button(
+                label="Download Edited Resume (.pdf)",
+                data=pdf_file,
+                file_name="Edited_Resume.pdf",
+                mime="application/pdf"
+            )
 
-# Defining a function for downloading the edited resume as a pdf
-def download_resume_pdf(resume_text):
-    buffer = BytesIO()
-    c = canvas.Canvas(buffer, pagesize=letter)
-    textobject = c.beginText(40, 750)
-    for line in resume_text.split('\n'):
-        textobject.textLine(line)
-    c.drawText(textobject)
-    c.showPage()
-    c.save()
-    buffer.seek(0)
-    return buffer
-
-# Streamlit download button
-if 'edited_resume' in locals():
-    pdf_file = download_resume_pdf(edited_resume)
-    st.download_button(
-        label="Download Edited Resume (.pdf)",
-        data=pdf_file,
-        file_name="Edited_Resume.pdf",
-        mime="application/pdf"
-    )
-
+else:
+    st.info("Please upload a resume and paste a job description above to generate results.")
 
 # ----- Reach Out Section - Tools -----
 st.header("Step 4: Recruiter Communication & Salary Insights")
 
-job_title = st.text_input("Enter Job Title")
-company_name = st.text_input("Enter Company Name")
-location = st.text_input("Location (optional)", value="Canada")
-
 if st.button("Generate Recruiter Message"):
     with st.spinner("Creating recruiter message..."):
-        recruiter_msg = generate_recruiter_message(job_title, company_name, job_description)
+        recruiter_msg = generate_recruiter_message(job_description)
     st.text_area("LinkedIn Message", recruiter_msg, height=150)
+
 
 if st.button("Generate Cold Email"):
     with st.spinner("Writing email..."):
-        cold_email = generate_cold_email(job_title, company_name, job_description)
+        cold_email = generate_cold_email(job_description)
     st.text_area("Cold Email Template", cold_email, height=250)
+
 
 if st.button("Suggest People to Contact"):
     with st.spinner("Finding roles..."):
-        titles = suggest_contact_titles(job_title)
+        titles = (", ".join(suggest_contact_titles(job_description)))
     st.text_area("Recommended Contacts", titles, height=150)
+
 
 if st.button("Estimate Salary Range"):
     with st.spinner("Estimating salary..."):
-        salary = estimate_salary(job_title, location)
+        salary = estimate_salary(job_description)
     st.success(f"Estimated Salary: {salary}")

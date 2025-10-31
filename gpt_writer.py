@@ -4,12 +4,15 @@ import os
 # Make sure your API key is set in environment variables or here
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-def rewrite_resume(resume_text, jd_text):
+def rewrite_resume(resume_text, jd_text, target_match=0.8):
     """
     Rewrites the resume to match the job description.
     """
     prompt = f"""
-You are a professional career coach and resume writer.
+You are a professional career coach and resume writer. Improve and tailor the following resume so it aligns
+with at least {int(target_match * 100)}% of the provided job description. 
+Do not invent fake experiences—only rephrase and highlight relevant skills naturally.
+Keep the formatting clean and professional.
 
 Resume:
 {resume_text}
@@ -33,6 +36,8 @@ Task:
         max_tokens=2000
     )
 
-    edited_resume = response['choices'][0]['message']['content']
+    edited_resume = response['choices'][0]['message']['content'].strip()
     
     return edited_resume
+
+
