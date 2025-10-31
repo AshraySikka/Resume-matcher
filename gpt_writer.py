@@ -1,7 +1,8 @@
 import openai
+import os
 
 # Make sure your API key is set in environment variables or here
-openai.api_key = "YOUR_OPENAI_API_KEY"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def rewrite_resume(resume_text, jd_text):
     """
