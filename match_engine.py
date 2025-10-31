@@ -4,7 +4,7 @@ import numpy as np
 from utils.text_utils import clean_text
 
 # Initialize OpenAI Client
-client = OpenAI(api_key=st.secrets("OPENAI_API_KEY"))
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 def get_embedding(text, model="text-embedding-3-small"):
     """Returns the embedding vector of a given text using OpenAI."""
