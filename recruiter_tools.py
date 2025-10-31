@@ -34,7 +34,7 @@ Keep it concise (under 120 words), friendly, and professional.
 Avoid fluff. End with an invitation to connect or discuss further.
 """
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-4o",
         messages=[
             {"role": "system", "content": "You are a professional recruiter assistant."},
@@ -43,7 +43,7 @@ Avoid fluff. End with an invitation to connect or discuss further.
         temperature=0.5
     )
 
-    return response['choices'][0]['message']['content']
+    return response.choices[0].message.content
 
 
 def generate_cold_email(jd_text):
@@ -67,7 +67,7 @@ Include:
 Keep it under 200 words.
 """
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-4o",
         messages=[
             {"role": "system", "content": "You write concise and effective cold emails for professionals."},
@@ -76,7 +76,7 @@ Keep it under 200 words.
         temperature=0.5
     )
 
-    return response['choices'][0]['message']['content']
+    return response.choices[0].message.content
 
 
 def suggest_contact_titles(jd_text):
@@ -87,7 +87,7 @@ Given the job title "{job_title}", in the company {company_name}, list 5 relevan
 in a company that the candidate should reach out to for the best chance of being hired.
 """
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-4o",
         messages=[
             {"role": "system", "content": "You are a recruiting expert."},
@@ -96,7 +96,7 @@ in a company that the candidate should reach out to for the best chance of being
         temperature=0.3
     )
 
-    return response['choices'][0]['message']['content']
+    return response.choices[0].message.content
 
 
 def estimate_salary(jd_text, location="Canada"):
@@ -109,7 +109,7 @@ Output example:
 "$90K-$120K CAD. Depends on experience, company size, and city."
 """
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-4o",
         messages=[
             {"role": "system", "content": "You are a labor market and salary analyst."},
@@ -118,4 +118,4 @@ Output example:
         temperature=0.4
     )
 
-    return response['choices'][0]['message']['content']
+    return response.choices[0].message.content
