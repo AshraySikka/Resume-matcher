@@ -1,19 +1,19 @@
-import openai
+from openai import OpenAI
 import numpy as np
 from utils.text_utils import clean_text
 
-# Set your API key (you can also load from environment variables)
-openai.api_key = "YOUR_OPENAI_API_KEY"
+# Initialize OpenAI Client
+client = OpenAI()
 
 def get_embedding(text, model="text-embedding-3-small"):
     """Returns the embedding vector of a given text using OpenAI."""
     text = clean_text(text)
-    response = openai.Embedding.create(
+    response = client.embeddings.create(
         model=model,
         input=text
     )
     
-    return np.array(response['data'][0]['embedding'])
+    return np.array(response.data[0].embedding)
 
 def cosine_similarity(vec1, vec2):
     """Calculate cosine similarity between two vectors."""
