@@ -51,9 +51,9 @@ if resume_input_method == "Upload File":
     resume_file = st.file_uploader("Upload your resume (.pdf or .docx)", type=["pdf", "docx"])
     
     if resume_file:
-        resume_text = extract_text_from_resume(resume_file)
+        resume_text = extract_text_from_resume(resume_file).strip()
         st.success("Resume loaded successfully!")
-        st.text_area("Resume Preview", value=resume_text, height=200)
+        #st.text_area("Resume Preview", value=resume_text, height=200)
 
 elif resume_input_method == "Paste Text":
     resume_text = st.text_area("Paste your resume here", height=200)
