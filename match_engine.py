@@ -60,6 +60,16 @@ def get_embedding(text, model="text-embedding-3-small", retries=6):
 
 def cosine_similarity(vec1, vec2):
     """Calculate cosine similarity between two vectors."""
+    
+    if vec1 is None or vec2 is None:
+        raise ValueError("One of the input vectors is None.")
+    
+    vec1 = np.array(vec1)
+    vec2 = np.array(vec2)
+    
+    if vec1.size == 0 or vec2.size == 0:
+        raise ValueError("One of the input vectors is empty.")
+    
     return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
 
 def compute_match_percentage(resume_text, jd_text):
