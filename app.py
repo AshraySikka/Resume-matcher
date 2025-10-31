@@ -15,6 +15,7 @@ from recruiter_tools import (
     estimate_salary
 )
 
+
 st.set_page_config(page_title="Resume Editor", layout="wide")
 st.title("JobMatch - Resume & Job Description Analyzer")
 
