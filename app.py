@@ -66,7 +66,7 @@ if job_description.strip(): # Only parse if text exists
     job_description_parsed = parse_jd(job_description)
     job_description = job_description_parsed["clean_text"]  # will be using this for matching/GPT
     st.success("Job Description parsed successfully!")
-    st.text_area("Cleaned JD Preview", job_description, height=150)
+    #st.text_area("Cleaned JD Preview", job_description, height=150)
 else:
     job_description = ""
 
