@@ -41,7 +41,7 @@ def get_embedding(text, model="text-embedding-3-small", retries=6):
                 model=model,
                 input=text
             )
-            embedding = np.array(response['data'][0]['embedding'])
+            embedding = np.array(response.data[0].embedding)
             embedding_cache[key] = embedding
             save_cache()
             return embedding
