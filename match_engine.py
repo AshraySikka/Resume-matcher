@@ -23,7 +23,7 @@ def save_cache():
     with open(CACHE_FILE, "wb") as f:
         pickle.dump(embedding_cache, f)
 
-def get_embedding(text, model="text-embedding-3-small", retries=3):
+def get_embedding(text, model="text-embedding-3-small", retries=6):
     """
     Returns the embedding vector of a given text using OpenAI.
     Caches embeddings locally to reduce API calls.
