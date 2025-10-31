@@ -1,8 +1,9 @@
-import openai
-import os
+from openai import OpenAI
+import streamlit as st
 
-# Make sure your API key is set in environment variables or here
-openai.api_key = os.getenv("OPENAI_API_KEY")
+
+# Initialize OpenAI Client
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 def rewrite_resume(resume_text, jd_text, target_match=0.8):
     """
@@ -28,7 +29,7 @@ Task:
 5. Return the resume in plain text format suitable for copy/paste or saving as Word/PDF.
 """
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-4o",
         messages=[{"role": "system", "content": "You are a resume optimization AI."},
                   {"role": "user", "content": prompt}],
@@ -36,7 +37,7 @@ Task:
         max_tokens=2000
     )
 
-    edited_resume = response['choices'][0]['message']['content'].strip()
+    edited_resume = (response.choices[0].message.content).strip()
     
     return edited_resume
 
