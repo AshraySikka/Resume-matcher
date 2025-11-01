@@ -2,6 +2,6 @@ streamlit
 PyPDF2
 numpy
 python-docx
-openai
+google.generativeai
 regex
 reportlab

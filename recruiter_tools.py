@@ -1,9 +1,15 @@
-from openai import OpenAI
+import google.generativeai as genai
 import streamlit as st
 import re
 
 # Initialize OpenAI Client
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+
+def gemini_generate(prompt, temp=0.5):
+    """Writing a function that takes a prompt and generates a response using google ai"""
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content(prompt, generation_config={"temperature": temp})
+    return response.text.strip()
 
 def extract_job_info(jd_text):
     """Extract job title and company name heuristically from a job description."""
@@ -34,16 +40,9 @@ Keep it concise (under 120 words), friendly, and professional.
 Avoid fluff. End with an invitation to connect or discuss further.
 """
 
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[
-            {"role": "system", "content": "You are a professional recruiter assistant."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.5
-    )
+    response = gemini_generate(prompt)
 
-    return response.choices[0].message.content
+    return response
 
 
 def generate_cold_email(jd_text):
@@ -67,16 +66,9 @@ Include:
 Keep it under 200 words.
 """
 
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[
-            {"role": "system", "content": "You write concise and effective cold emails for professionals."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.5
-    )
+    response = gemini_generate(prompt)
 
-    return response.choices[0].message.content
+    return response
 
 
 def suggest_contact_titles(jd_text):
@@ -87,16 +79,9 @@ Given the job title "{job_title}", in the company {company_name}, list 5 relevan
 in a company that the candidate should reach out to for the best chance of being hired.
 """
 
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[
-            {"role": "system", "content": "You are a recruiting expert."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.3
-    )
+    response = gemini_generate(prompt, temp = 0.3)
 
-    return response.choices[0].message.content
+    return response
 
 
 def estimate_salary(jd_text, location="Canada"):
@@ -109,13 +94,6 @@ Output example:
 "$90K-$120K CAD. Depends on experience, company size, and city."
 """
 
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[
-            {"role": "system", "content": "You are a labor market and salary analyst."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.4
-    )
+    response = gemini_generate(prompt, temp = 0.4)
 
-    return response.choices[0].message.content
+    return response

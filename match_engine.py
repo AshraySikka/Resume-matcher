@@ -1,62 +1,36 @@
-from openai import OpenAI
-from openai import RateLimitError
+import google.generativeai as genai
 import streamlit as st
 import numpy as np
 from utils.text_utils import clean_text
-import time
-import hashlib
-import pickle
+
+# Configuring Gemini API key
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+
+# Initializing the Gemini model
+model = genai.GenerativeModel("gemini-pro")
+
+def gemini_generate(prompt, temp=0.5):
+    """Writing a function that takes a prompt and generates a response using google ai"""
+    response = model.generate_content(prompt, generation_config={"temperature": temp})
+    return response.text.strip()
 
 
-# Initialize OpenAI Client
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-
-# Simple local cache for embeddings
-CACHE_FILE = "embedding_cache.pkl"
-try:
-    with open(CACHE_FILE, "rb") as f:
-        embedding_cache = pickle.load(f)
-except FileNotFoundError:
-    embedding_cache = {}
-
-def save_cache():
-    with open(CACHE_FILE, "wb") as f:
-        pickle.dump(embedding_cache, f)
-
-def get_embedding(text, model="text-embedding-3-small", retries=6):
+def get_embedding(text):
     """
-    Returns the embedding vector of a given text using OpenAI.
-    Caches embeddings locally to reduce API calls.
-    Handles rate limits with exponential backoff.
+    Generate a semantic embedding for the given text using Gemini.
     """
     text = clean_text(text)
-    key = hashlib.sha256(text.encode()).hexdigest()  # unique key for text
+    
+    embed_model = genai.embed_content(
+        model = "models/embedding-001",
+        content = text,
+        task_type = "retrieval_document"
+    )
 
-    if key in embedding_cache:
-        return embedding_cache[key]
+    embedding = np.array(embed_model["embedding"])
 
-    for i in range(retries):
-        try:
-            response = client.embeddings.create(
-                model=model,
-                input=text
-            )
-            embedding = np.array(response.data[0].embedding)
-            embedding_cache[key] = embedding
-            save_cache()
-            return embedding
-        except RateLimitError:
-            wait_time = 2 ** i  # 1s, 2s, 4s...
-            print(f"Rate limit hit, retrying in {wait_time}s...")
-            time.sleep(wait_time)
-        except TypeError as e:
-            st.error("A type error occurred while computing match percentage.")
-            st.write(f"Details: {e}")
-        except Exception as e:
-            st.error("An unexpected error occurred.")
-            st.write(f"Details: {e}")
+    return embedding
 
-    raise Exception("Failed to get embedding after several retries")
 
 def cosine_similarity(vec1, vec2):
     """Calculate cosine similarity between two vectors."""

@@ -1,9 +1,17 @@
-from openai import OpenAI
+import google.generativeai as genai
 import streamlit as st
 
 
-# Initialize OpenAI Client
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+# Configuring Gemini key
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+
+# Initializing the Gemini model
+model = genai.GenerativeModel("gemini-pro")
+
+def gemini_generate(prompt, temp=0.5):
+    """Writing a function that takes a prompt and generates a response using google ai"""
+    response = model.generate_content(prompt, generation_config={"temperature": temp})
+    return response.text.strip()
 
 def rewrite_resume(resume_text, jd_text, target_match=0.8):
     """
@@ -29,16 +37,8 @@ Task:
 5. Return the resume in plain text format suitable for copy/paste or saving as Word/PDF.
 """
 
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[{"role": "system", "content": "You are a resume optimization AI."},
-                  {"role": "user", "content": prompt}],
-        temperature=0.2,
-        max_tokens=2000
-    )
-
-    edited_resume = (response.choices[0].message.content).strip()
+    response = gemini_generate(prompt, temp = 0.2)
     
-    return edited_resume
+    return response
 
 
