@@ -2,7 +2,7 @@ import google.generativeai as genai
 import streamlit as st
 import re
 
-# Initialize OpenAI Client
+# Configure Gemini API key
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
 def gemini_generate(prompt, temp=0.5):
