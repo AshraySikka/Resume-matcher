@@ -7,7 +7,7 @@ genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
 def gemini_generate(prompt, temp=0.5):
     """Writing a function that takes a prompt and generates a response using google ai"""
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-pro")
     response = model.generate_content(prompt, generation_config={"temperature": temp})
     return response.text.strip()
 
@@ -21,6 +21,12 @@ def extract_job_info(jd_text):
     title = title_match.group(1).strip() if title_match else "the role"
     company = company_match.group(1).strip() if company_match else "the company"
 
+    if not title: # Requesting job title incase the regex is not able to find anything
+        title = st.text_area("Job title not found in the JD! Please add the title below:", height=100)
+    
+    if not company: # Requesting company name incase the regex is not able to find anything
+        company = st.text_area("Not able to identify the company name in the JD! Please add the company name below:", height=100)
+    
     return title, company
 
 def generate_recruiter_message(jd_text, tone="Warm"):

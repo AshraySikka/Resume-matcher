@@ -1,14 +1,14 @@
 import re
 from utils.skill_list import TECH_SKILLS, SOFT_SKILLS
 
-def clean_text(text: str) -> str:
+def clean_text(text):
     """Basic text cleaning for Job Description"""
     text = re.sub(r'\s+', ' ', text)  # Remove extra spaces/newlines
     text = re.sub(r'[^\w\s.,-]', '', text)  # Remove unwanted special chars
     return text.strip().lower()
 
 
-def extract_sections(text: str) -> dict:
+def extract_sections(text):
     """Try to split JD into sections based on common headings"""
     sections = {}
     patterns = {
@@ -26,17 +26,19 @@ def extract_sections(text: str) -> dict:
     return sections
 
 
-def extract_skills(text: str) -> list:
+def extract_skills(text):
     """Extract skills from JD based on predefined list"""
     text_lower = text.lower()
     found_skills = []
+
     for skill in TECH_SKILLS + SOFT_SKILLS:
         if skill.lower() in text_lower:
             found_skills.append(skill)
+
     return list(set(found_skills))  # Remove duplicates
 
 
-def parse_jd(raw_text: str) -> dict:
+def parse_jd(raw_text):
     """Main function to process JD"""
     cleaned = clean_text(raw_text)
     sections = extract_sections(cleaned)
