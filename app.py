@@ -86,7 +86,7 @@ if resume_text and job_description:
         with st.spinner("Generating optimized resume..."):
             edited_resume = rewrite_resume(resume_text, job_description)
         st.success("Edited Resume Ready!")
-        st.text_area("Edited Resume Preview", edited_resume, height=300)
+        #st.text_area("Edited Resume Preview", edited_resume, height=300)
 
         # Streamlit download button for word doc
         if 'edited_resume' in locals():
