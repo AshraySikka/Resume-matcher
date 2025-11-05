@@ -14,6 +14,7 @@ from recruiter_tools import (
     suggest_contact_titles,
     estimate_salary
 )
+from interview_questions import interview_questions
 
 
 st.set_page_config(page_title="Resume Editor", layout="wide")
@@ -137,6 +138,19 @@ if resume_text and job_description:
         with st.spinner("Estimating salary..."):
             salary = estimate_salary(job_description)
         st.success(f"Estimated Salary: {salary}")
+
+else:
+    st.info("Please upload a resume and paste a job description above to generate results.")
+
+
+# ----- Potential Interview Questions -----
+st.header("Step 5: Potential Interview Prep")
+
+if resume_text and job_description:
+    if st.button("Generate Potentail Interview Questions"):
+        with st.spinner("Generating interview questions..."):
+            questions = interview_questions(resume_text, job_description)
+        st.text_area("Interview Questions", questions, height=250)
 
 else:
     st.info("Please upload a resume and paste a job description above to generate results.")
