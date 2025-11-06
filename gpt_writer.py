@@ -6,7 +6,7 @@ import streamlit as st
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
 # Initializing the Gemini model
-model = genai.GenerativeModel("gemini-pro")
+model = genai.GenerativeModel("gemini-1.5-pro")
 
 def gemini_generate(prompt, temp=0.5):
     """Writing a function that takes a prompt and generates a response using google ai"""
