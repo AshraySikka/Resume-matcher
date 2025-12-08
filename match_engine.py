@@ -9,15 +9,15 @@ genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 # Initializing the Gemini model
 model = genai.GenerativeModel("gemini-2.5-flash")
 
-#Caching the data to make sure my API calls are low and also so that streamlit keeps my data displayed
-if "embeddings"not in st.session_state:
-    st.session_state["embeddings"] = {} #Creating an empty dictionary called "embeddings" in the current session state
+
 
 def gemini_generate(prompt, temp=0.5):
     """Writing a function that takes a prompt and generates a response using google ai"""
     response = model.generate_content(prompt, generation_config={"temperature": temp})
     return response.text.strip()
 
+#Caching the data to make sure my API calls are low and also so that streamlit keeps my data displayed
+@st.cache_data(show_spinner=False)
 
 def get_embedding(text):
     """
@@ -26,17 +26,13 @@ def get_embedding(text):
     """
     text = clean_text(text)
     
-    if text in st.session_state["embeddings"]: #checking if the embedding already exists in the code
-        return st.session_state["embeddings"][text] 
-    
     embed_model = genai.embed_content(
-        model = "models/embedding-004", # model to be used for getting the embedding
+        model = "models/text-embedding-004", # model to be used for getting the embedding
         content = text,
         task_type = "retrieval_document" # that means we will be using the embedding to compare text
     )
 
     embedding = np.array(embed_model["embedding"])
-    st.session_state["embeddings"][text] = embedding #storing the embedding as a value for the key 'text' that we got from 'clean text'
 
     return embedding
 
@@ -58,7 +54,7 @@ def cosine_similarity(vec1, vec2):
         
     similarity = dot_product / (norm_resume * norm_jd)
     
-    return round(similarity * 100, 2)
+    return similarity
 
 def compute_match_percentage(resume_text, jd_text):
     """Compute similarity score between resume and job description."""
