@@ -7,7 +7,7 @@ genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
 def gemini_generate(prompt, temp=0.5):
     """Writing a function that takes a prompt and generates a response using google ai"""
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-2.5-flash")
     response = model.generate_content(prompt, generation_config={"temperature": temp})
     return response.text.strip()
 
