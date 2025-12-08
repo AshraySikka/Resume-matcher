@@ -21,11 +21,11 @@ def extract_job_info(jd_text):
     title = title_match.group(1).strip() if title_match else None
     company = company_match.group(1).strip() if company_match else None
 
-    if not title: # Requesting job title incase the regex is not able to find anything
-        title = st.text_area("Job title not found in the JD! Please add the title below:", height=100)
+    #if not title: # Requesting job title incase the regex is not able to find anything
+        #title = st.text_area("Job title not found in the JD! Please add the title below:", height=100)
     
-    if not company: # Requesting company name incase the regex is not able to find anything
-        company = st.text_area("Not able to identify the company name in the JD! Please add the company name below:", height=100)
+    #if not company: # Requesting company name incase the regex is not able to find anything
+        #company = st.text_area("Not able to identify the company name in the JD! Please add the company name below:", height=100)
     
     return title, company
 
