@@ -83,11 +83,16 @@ def suggest_contact_titles(jd_text):
     prompt = f"""
 Given the job title "{job_title}", in the company {company_name}, list 5 relevant job titles or roles of people
 in a company that the candidate should reach out to for the best chance of being hired.
+Example format: Recruiter, Hiring Manager, Vice President of Engineering, Team Lead, CTO
 """
 
     response = gemini_generate(prompt, temp = 0.3)
 
-    return response
+    if response:
+        titles_list = [title.strip() for title in response.split(',')]
+        return titles_list
+    else:
+        return []
 
 
 def estimate_salary(jd_text, location="Canada"):
