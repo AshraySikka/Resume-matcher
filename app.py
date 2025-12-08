@@ -20,6 +20,7 @@ from interview_questions import interview_questions
 st.set_page_config(page_title="Resume Editor", layout="wide")
 st.title("JobMatch - Resume & Job Description Analyzer")
 
+
 # Defining a function for downloading the edited resume as a pdf
 def download_resume_pdf(resume_text):
     buffer = BytesIO()

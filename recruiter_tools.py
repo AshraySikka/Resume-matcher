@@ -12,14 +12,14 @@ def gemini_generate(prompt, temp=0.5):
     return response.text.strip()
 
 def extract_job_info(jd_text):
-    """Extract job title and company name heuristically from a job description."""
-    # Try to find something like: "Company Name is hiring a Job Title" or "at Company Name"
+    """Extract job title and company name from a job description."""
+    # Trying to find something like: "Company Name is hiring a Job Title" or "at Company Name"
     title_match = re.search(r'(?i)(?<=for\s)([A-Z][\w\s&/-]+)(?=\s(at|@))', jd_text)
     company_match = re.search(r'(?i)(?<=at\s)([A-Z][\w\s&/-]+)', jd_text)
 
-    # Fallbacks
-    title = title_match.group(1).strip() if title_match else "the role"
-    company = company_match.group(1).strip() if company_match else "the company"
+    # Fallbacks to make sure we can ask the user the name of the company and the role title
+    title = title_match.group(1).strip() if title_match else None
+    company = company_match.group(1).strip() if company_match else None
 
     if not title: # Requesting job title incase the regex is not able to find anything
         title = st.text_area("Job title not found in the JD! Please add the title below:", height=100)
