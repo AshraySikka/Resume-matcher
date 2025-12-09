@@ -30,10 +30,14 @@ def extract_job_info(jd_text):
 
     if not title: # Requesting job title incase the regex is not able to find anything
         st.session_state.title = st.text_input("Job title not found in the JD! Please add the title below:").strip()
-    
+
     if not company: # Requesting company name incase the regex is not able to find anything
         st.session_state.company = st.text_input("Not able to identify the company name in the JD! Please add the company name below:").strip()
     
+    if not title or not company:
+        st.warning("Please add the missing details and click 'Generate' again.")
+        st.stop()
+        
     title = st.session_state.title or "[Job Title]"
     company = st.session_state.company or "[Company Name]"
 
