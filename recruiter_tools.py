@@ -13,33 +13,36 @@ def gemini_generate(prompt, temp=0.5):
 
 def extract_job_info(jd_text):
     """Extract job title and company name from a job description."""
-    # Trying to find something like: "Company Name is hiring a Job Title" or "at Company Name"
-    title_match = re.search(r'(?i)(?<=for\s)([A-Z][\w\s&/-]+)(?=\s(at|@))', jd_text)
-    company_match = re.search(r'(?i)(?<=at\s)([A-Z][\w\s&/-]+)', jd_text)
-
-    # Fallbacks to make sure we can ask the user the name of the company and the role title
-    title = title_match.group(1).strip() if title_match else None
-    company = company_match.group(1).strip() if company_match else None
-
+    
     #Will be storing the job title and company name in the session state to make sure we do not ask the user again
     if "title" not in st.session_state:
         st.session_state.title = ""
 
     if "company" not in st.session_state:
-        st.session_state.company = ""
+        st.session_state.company = "" 
 
-    if not title: # Requesting job title incase the regex is not able to find anything
-        st.session_state.title = st.text_input("Job title not found in the JD! Please add the title below:").strip()
+    # Trying to find something like: "Company Name is hiring a Job Title" or "at Company Name"
+    if not st.session_state.title:
+        title_match = re.search(r'(?i)(?<=for\s)([A-Z][\w\s&/-]+)(?=\s(at|@))', jd_text)
+        if title_match:
+            st.session_state.title = title_match.group(1).strip()
+        else:
+            st.session_state.title = st.text_input("Job title not found in the JD! Please add the title below:", key="title").strip() # Fallbacks to make sure we can ask the user the role title
 
-    if not company: # Requesting company name incase the regex is not able to find anything
-        st.session_state.company = st.text_input("Not able to identify the company name in the JD! Please add the company name below:").strip()
-    
-    if not title or not company:
+      
+    if not st.session_state.company:
+        company_match = re.search(r'(?i)(?<=at\s)([A-Z][\w\s&/-]+)', jd_text)
+        if company_match:
+            st.session_state.company = company_match.group(1).strip()
+        else:
+            st.session_state.company = st.text_input("Not able to identify the company name in the JD! Please add the company name below:", key="company").strip()
+
+    if not st.session_state.title or not st.session_state.company:
         st.warning("Please add the missing details and click 'Generate' again.")
         st.stop()
-        
-    title = st.session_state.title or "[Job Title]"
-    company = st.session_state.company or "[Company Name]"
+
+    title = st.session_state.title
+    company = st.session_state.company
 
     return title, company
 
