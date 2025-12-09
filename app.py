@@ -55,20 +55,18 @@ if resume_input_method == "Upload File":
     if resume_file:
         resume_text = extract_text_from_resume(resume_file).strip()
         st.success("Resume loaded successfully!")
-        #st.text_area("Resume Preview", value=resume_text, height=200)
 
 elif resume_input_method == "Paste Text":
-    resume_text = st.text_area("Paste your resume here", height=200)
+    resume_text = st.markdown("Paste your resume here", height=200)
 
 # ----- Job Description Input -----
 st.header("Step 2: Paste Job Description")
-job_description = st.text_area("Paste the job description here", height=200)
+job_description = st.markdown("Paste the job description here", height=200)
 
 if job_description.strip(): # Only parse if text exists
     job_description_parsed = parse_jd(job_description)
     job_description = job_description_parsed["clean_text"]  # will be using this for matching/GPT
     st.success("Job Description parsed successfully!")
-    #st.text_area("Cleaned JD Preview", job_description, height=150)
 else:
     job_description = ""
 
@@ -88,7 +86,6 @@ if resume_text and job_description:
         with st.spinner("Generating optimized resume..."):
             edited_resume = rewrite_resume(resume_text, job_description)
         st.success("Edited Resume Ready!")
-        #st.text_area("Edited Resume Preview", edited_resume, height=300)
 
         # Streamlit download button for word doc
         if 'edited_resume' in locals():
@@ -120,19 +117,19 @@ if resume_text and job_description:
     if st.button("Generate Recruiter Message"):
         with st.spinner("Creating recruiter message..."):
             recruiter_msg = generate_recruiter_message(job_description)
-        st.text_area("LinkedIn Message", recruiter_msg, height=150)
+        st.markdown("LinkedIn Message", recruiter_msg, height=150)
 
 
     if st.button("Generate Cold Email"):
         with st.spinner("Writing email..."):
             cold_email = generate_cold_email(job_description)
-        st.text_area("Cold Email Template", cold_email, height=250)
+        st.markdown("Cold Email Template", cold_email, height=450)
 
 
     if st.button("Suggest People to Contact"):
         with st.spinner("Finding roles..."):
             titles = (", ".join(suggest_contact_titles(job_description)))
-        st.text_area("Recommended Contacts", titles, height=150)
+        st.markdown("Recommended Contacts", titles, height=250)
 
 
     if st.button("Estimate Salary Range"):
@@ -151,7 +148,7 @@ if resume_text and job_description:
     if st.button("Generate Potentail Interview Questions"):
         with st.spinner("Generating interview questions..."):
             questions = interview_questions(resume_text, job_description)
-        st.text_area("Interview Questions", questions, height=250)
+        st.markdown("Interview Questions", questions, height=650)
 
 else:
     st.info("Please upload a resume and paste a job description above to generate results.")
