@@ -21,14 +21,22 @@ def extract_job_info(jd_text):
     title = title_match.group(1).strip() if title_match else None
     company = company_match.group(1).strip() if company_match else None
 
+    #Will be storing the job title and company name in the session state to make sure we do not ask the user again
+    if "title" not in st.session_state:
+        st.session_state.title = ""
+
+    if "company" not in st.session_state:
+        st.session_state.company = ""
+
     if not title: # Requesting job title incase the regex is not able to find anything
-        title = st.text_area("Job title not found in the JD! Please add the title below:", height=100)
-        st.stop()
+        st.session_state.title = st.text_input("Job title not found in the JD! Please add the title below:").strip()
     
     if not company: # Requesting company name incase the regex is not able to find anything
-        company = st.text_area("Not able to identify the company name in the JD! Please add the company name below:", height=100)
-        st.stop()
+        st.session_state.company = st.text_input("Not able to identify the company name in the JD! Please add the company name below:").strip()
     
+    title = st.session_state.title or "[Job Title]"
+    company = st.session_state.company or "[Company Name]"
+
     return title, company
 
 def generate_recruiter_message(jd_text, tone="Warm"):
