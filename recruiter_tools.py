@@ -26,21 +26,34 @@ def extract_job_info(jd_text):
         title_match = re.search(r'(?i)(?<=for\s)([A-Z][\w\s&/-]+)(?=\s(at|@))', jd_text)
         if title_match:
             st.session_state.title = title_match.group(1).strip()
-        else:
-            st.session_state.title = st.text_input("Job title not found in the JD! Please add the title below:", key="title").strip() # Fallbacks to make sure we can ask the user the role title
-
-      
+    
     if not st.session_state.company:
         company_match = re.search(r'(?i)(?<=at\s)([A-Z][\w\s&/-]+)', jd_text)
         if company_match:
             st.session_state.company = company_match.group(1).strip()
+     
+    #Checking what my regex has
+    has_title = bool(st.session_state.title)
+    has_company = bool(st.session_state.company)
+
+    if not has_title or not has_company:
+        st.warning("Some details were not found. Please fill them in to proceed.")
+        if has_title:
+                # If I have title but miss company, show title as "Read Only"
+                st.success(f"Role: {st.session_state.title}")
         else:
-            st.session_state.company = st.text_input("Not able to identify the company name in the JD! Please add the company name below:", key="company").strip()
+                # Show input box. Now linking my 'key' as 'title' will update session_state automatically.
+                st.text_input("Job Title", key="title")
+        
+        if has_company:
+                st.success(f"Company: {st.session_state.company}")
+        else:
+                st.text_input("Company Name", key="company")
 
-    if not st.session_state.title or not st.session_state.company:
-        st.warning("Please add the missing details and click 'Generate' again.")
         st.stop()
-
+    else:
+        st.info(f"Targeting: **{st.session_state.title}** at **{st.session_state.company}**")
+        
     title = st.session_state.title
     company = st.session_state.company
 
