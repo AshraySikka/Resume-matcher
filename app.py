@@ -57,11 +57,11 @@ if resume_input_method == "Upload File":
         st.success("Resume loaded successfully!")
 
 elif resume_input_method == "Paste Text":
-    resume_text = st.markdown("Paste your resume here", height=200)
+    resume_text = st.text_area("Paste your resume here", height=200)
 
 # ----- Job Description Input -----
 st.header("Step 2: Paste Job Description")
-job_description = st.markdown("Paste the job description here", height=200)
+job_description = st.text_area("Paste the job description here", height=200)
 
 if job_description.strip(): # Only parse if text exists
     job_description_parsed = parse_jd(job_description)
@@ -117,19 +117,19 @@ if resume_text and job_description:
     if st.button("Generate Recruiter Message"):
         with st.spinner("Creating recruiter message..."):
             recruiter_msg = generate_recruiter_message(job_description)
-        st.markdown("LinkedIn Message", recruiter_msg, height=150)
+        st.text_area("LinkedIn Message", recruiter_msg, height=150)
 
 
     if st.button("Generate Cold Email"):
         with st.spinner("Writing email..."):
             cold_email = generate_cold_email(job_description)
-        st.markdown("Cold Email Template", cold_email, height=450)
+        st.text_area("Cold Email Template", cold_email, height=450)
 
 
     if st.button("Suggest People to Contact"):
         with st.spinner("Finding roles..."):
             titles = (", ".join(suggest_contact_titles(job_description)))
-        st.markdown("Recommended Contacts", titles, height=250)
+        st.text_area("Recommended Contacts", titles, height=250)
 
 
     if st.button("Estimate Salary Range"):
@@ -148,7 +148,7 @@ if resume_text and job_description:
     if st.button("Generate Potentail Interview Questions"):
         with st.spinner("Generating interview questions..."):
             questions = interview_questions(resume_text, job_description)
-        st.markdown("Interview Questions", questions, height=650)
+        st.text_area("Interview Questions", questions, height=650)
 
 else:
     st.info("Please upload a resume and paste a job description above to generate results.")
