@@ -36,24 +36,12 @@ def extract_job_info(jd_text):
     has_title = bool(st.session_state.title)
     has_company = bool(st.session_state.company)
 
-    if not has_title or not has_company:
-        st.warning("Some details were not found. Please fill them in to proceed.")
-        if has_title:
-                # If I have title but miss company, show title as "Read Only"
-                st.success(f"Role: {st.session_state.title}")
-        else:
-                # Show input box. Now linking my 'key' as 'title' will update session_state automatically.
-                st.text_input("Job Title", key="title")
+    if not has_title: # Assigning generic title as it was not found in the JD
+        st.session_state.title = "[Job Title]"
         
-        if has_company:
-                st.success(f"Company: {st.session_state.company}")
-        else:
-                st.text_input("Company Name", key="company")
+    if not has_company:
+        st.session_state.company = "[Company Name]"
 
-        st.stop()
-    else:
-        st.info(f"Targeting: **{st.session_state.title}** at **{st.session_state.company}**")
-        
     title = st.session_state.title
     company = st.session_state.company
 
@@ -63,17 +51,23 @@ def generate_recruiter_message(jd_text, tone="Warm"):
     """Generate a short LinkedIn message to a recruiter."""
     job_title, company_name = extract_job_info(jd_text)
     prompt = f"""
-You are a career networking assistant.
+You are an expert career networker who writes messages that get replies.
 
-Write a {tone.lower()} LinkedIn message for a candidate interested in the position:
-Job Title: {job_title}
-Company: {company_name}
+Write a {tone.lower()} LinkedIn connection message (under 300 characters) to a recruiter regarding the {job_title} role at {company_name}.
 
-Base it on this job description:
+Context from Job Description:
 {jd_text}
 
-Keep it concise (under 120 words), friendly, and professional.
-Avoid fluff. End with an invitation to connect or discuss further.
+### STRICT RULES FOR "HUMAN" TONE:
+1. **NO ROBOTIC OPENERS:** Do NOT use "I hope this finds you well," "I am writing to express interest," or "I was impressed by." Start directly with why the specific team or project looks interesting.
+2. **BE SPECIFIC:** Mention ONE specific technology, project, or goal from the JD that excites you. Do not just say "your company values."
+3. **USE CONTRACTIONS:** Use "I'm," "I'd," "It's" to sound natural.
+4. **LOW-FRICTION CLOSE:** Do not ask for a "30-minute meeting." Ask a simple "Yes/No" question or just ask to connect to follow their updates.
+
+### EXAMPLE OF WHAT I WANT:
+"Hi [Name], I saw {company_name} is moving into [Topic]—as a dev who loves [Skill], that caught my eye immediately. I'd love to connect and keep up with the team's work."
+
+Generate the message now.
 """
 
     response = gemini_generate(prompt)
@@ -85,21 +79,23 @@ def generate_cold_email(jd_text):
     """Generate a cold email to the recruiter or company."""
     job_title, company_name = extract_job_info(jd_text)
     prompt = f"""
-You are an email strategist for job seekers.
+You are an expert career coach who writes high-converting, human-sounding emails.
 
-Write a professional cold email for a candidate applying to:
-Job Title: {job_title}
+Draft a warm, personal cold email for a candidate applying to:
+Role: {job_title}
 Company: {company_name}
 
-Base it on the following job description:
+Using this Job Description as context:
 {jd_text}
 
-Include:
-1. A strong but humble subject line
-2. A short intro that references the role
-3. A sentence linking the candidate's skills (assume they are qualified)
-4. A polite call-to-action
-Keep it under 200 words.
+### Instructions for Tone & Style:
+1. **Subject Line:** Make it intriguing but casual (e.g., "Question about the {job_title} role" or "{company_name} + {job_title}"). Avoid stiff phrases like "Application for...".
+2. **The Opening:** Do NOT start with "I hope this email finds you well" or "I am writing to apply." Start with a genuine compliment about the company or a specific detail from the job description that excited the candidate.
+3. **The Middle:** connect ONE key skill from the JD to the candidate's experience casually. Show, don't just tell.
+4. **The Close (Crucial):** Make the call-to-action "low friction." Do not ask for a 30-minute interview. Ask for a quick piece of advice or a simple "yes/no" question to gauge interest.
+5. **Human Touch:** Use contractions (e.g., "I'm" instead of "I am"). Sound enthusiastic but not desperate.
+
+Keep it under 150 words. The goal is to start a conversation, not just submit a resume.
 """
 
     response = gemini_generate(prompt)
@@ -129,10 +125,21 @@ def estimate_salary(jd_text, location="Canada"):
     """Estimate salary range using GPT reasoning."""
     job_title, company_name = extract_job_info(jd_text)
     prompt = f"""
-Estimate the typical annual salary range for a {job_title} role in {location}, company{company_name}.
-Include a one-line explanation of what factors can affect it.
-Output example:
-"$90K-$120K CAD. Depends on experience, company size, and city."
+You are a salary estimation assistant.
+
+Analyze the following inputs:
+Role: {job_title}
+Company: {company_name}
+Location: {location}
+
+### LOGIC CHECK:
+If the Role or Company listed above are empty, "None", "Unknown", or generic placeholders (like "[Company Name]"), output EXACTLY this sentence and nothing else:
+"Currently there is not enough data available online to generate the salary."
+
+### ESTIMATION TASK:
+If valid specific details are provided, estimate the typical annual salary range.
+Output format:
+"$MINk-$MAXk CAD. [One-line explanation of factors like experience or company size]"
 """
 
     response = gemini_generate(prompt, temp = 0.4)

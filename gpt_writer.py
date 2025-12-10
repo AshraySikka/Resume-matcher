@@ -18,23 +18,31 @@ def rewrite_resume(resume_text, jd_text, target_match=0.8):
     Rewrites the resume to match the job description.
     """
     prompt = f"""
-You are a professional career coach and resume writer. Improve and tailor the following resume so it aligns
-with at least {int(target_match * 100)}% of the provided job description. 
-Do not invent fake experiences—only rephrase and highlight relevant skills naturally.
-Keep the formatting clean and professional.
+Act as an expert Resume Optimization Engine.
 
-Resume:
+Your Task: Rewrite the candidate's resume to target the specific Job Description (JD) below, ensuring an ATS match score of {int(target_match * 100)}%+.
+
+### INPUT DATA:
+RESUME:
 {resume_text}
 
-Job Description:
+JOB DESCRIPTION:
 {jd_text}
 
-Task:
-1. Rewrite the resume to highlight skills, experience, and keywords from the Job Description.
-2. Keep all content truthful to the original resume.
-3. Ensure the revised resume aligns with the JD at least 80% in skills and keywords.
-4. Maintain professional formatting with bullet points and headings.
-5. Return the resume in plain text format suitable for copy/paste or saving as Word/PDF.
+### STRICT CONSTRAINTS (READ CAREFULLY):
+1. **NO CONVERSATIONAL FILLER:** Do not output sentences like "Here is the updated resume" or "I have optimized it." Output **ONLY** the resume content.
+2. **ZERO DATA LOSS:** You must include ALL sections from the original resume (Contact Info, Education, Experience, Projects, Skills). Do not summarize or truncate older roles.
+3. **FORMATTING:** Use valid Markdown.
+   - Use `##` for Section Headers (e.g., ## EXPERIENCE).
+   - Use `###` for Job Titles/Companies.
+   - Use `-` for bullet points.
+4. **KEYWORD OPTIMIZATION:** Swap generic verbs with specific keywords from the JD where truthfully applicable.
+5. **LENGTH:** The output should be roughly the same length as the input resume. Do not shorten it.
+
+### OUTPUT FORMAT:
+[Start of Resume]
+(The full resume content in Markdown)
+[End of Resume]
 """
 
     response = gemini_generate(prompt, temp = 0.2)
