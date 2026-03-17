@@ -4,6 +4,10 @@ An AI-powered resume analysis tool that scores your resume against any job descr
 
 ---
 
+**Live Demo:** [resume-matcher-ashray.streamlit.app](https://resume-matcher-ashray.streamlit.app/)
+
+```
+
 ## What it does
 
 - Upload or paste your resume (PDF or plain text)
@@ -110,5 +114,5 @@ Built as part of my transition into backend Python development, focusing on LLM 
 
 ## Author
 
-**Ashray Sikka** — Backend Developer (Python · FastAPI · PostgreSQL)
+**Ashray Sikka** — Backend Developer (Python · MySQL · SQLite)
 [LinkedIn](https://www.linkedin.com/in/ashraysikka) · [GitHub](https://github.com/AshraySikka)
