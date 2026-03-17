@@ -6,7 +6,7 @@ An AI-powered resume analysis tool that scores your resume against any job descr
 
 **Live Demo:** [resume-matcher-ashray.streamlit.app](https://resume-matcher-ashray.streamlit.app/)
 
-```
+---
 
 ## What it does
 
@@ -24,8 +24,8 @@ An AI-powered resume analysis tool that scores your resume against any job descr
 
 ```
 ┌─────────────────────────────────────────────┐
-│                  Streamlit UI                │
-│              (app.py — frontend layer)       │
+│                  Streamlit UI               │
+│              (app.py — frontend layer)      │
 └────────────────────┬────────────────────────┘
                      │
          ┌───────────▼───────────┐
@@ -114,5 +114,5 @@ Built as part of my transition into backend Python development, focusing on LLM 
 
 ## Author
 
-**Ashray Sikka** — Backend Developer (Python · MySQL · SQLite)
+**Ashray Sikka** — Backend Developer (Python · MySQL · PostgreSQL)
 [LinkedIn](https://www.linkedin.com/in/ashraysikka) · [GitHub](https://github.com/AshraySikka)
