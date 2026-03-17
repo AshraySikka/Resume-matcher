@@ -27,7 +27,7 @@ def get_embedding(text):
     text = clean_text(text)
     
     embed_model = genai.embed_content(
-        model = "models/embedding-001", # model to be used for getting the embedding
+        model = "models/gemini-embedding-001", # model to be used for getting the embedding
         content = text,
         task_type = "retrieval_document" # that means we will be using the embedding to compare text
     )
