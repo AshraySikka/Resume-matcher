@@ -1,6 +1,6 @@
 # Resume Matcher
 
-An AI-powered resume analysis tool that scores your resume against any job description, identifies skill gaps, rewrites weak sections using LLMs, and exports a polished PDF — built to demonstrate end-to-end Python backend and NLP pipeline development.
+An AI-powered resume analysis tool that scores your resume against any job description, identifies skill gaps, rewrites weak sections using LLMs, and exports a polished PDF built to demonstrate end-to-end Python backend and NLP pipeline development.
 
 ---
 
@@ -106,7 +106,7 @@ Resume-matcher/
 
 ## Why I built this
 
-Job seekers often apply to roles without knowing how well their resume actually maps to the job description. This tool automates that gap analysis using semantic similarity — going beyond simple keyword matching — and uses an LLM to actively improve the resume rather than just flag problems.
+Job seekers often apply to roles without knowing how well their resume actually maps to the job description. This tool automates that gap analysis using semantic similarity going beyond simple keyword matching and uses an LLM to actively improve the resume rather than just flag problems.
 
 Built as part of my transition into backend Python development, focusing on LLM API integration, modular pipeline design, and practical NLP tooling.
 
