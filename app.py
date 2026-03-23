@@ -276,6 +276,11 @@ st.header("Step 2: Paste Job Description")
 job_description = st.text_area("Paste the job description here", height=200)
 
 if job_description.strip():
+    # Clear cached job info if JD text changed so extraction re-runs
+    if "last_jd_hash" not in st.session_state or st.session_state.last_jd_hash != hash(job_description):
+        st.session_state.last_jd_hash = hash(job_description)
+        st.session_state.jd_info_extracted = False
+
     job_description_parsed = parse_jd(job_description)
     job_description = job_description_parsed["clean_text"]
     st.success("Job Description parsed successfully!")
