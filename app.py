@@ -20,6 +20,11 @@ from recruiter_tools import (
 )
 from interview_questions import interview_questions
 
+st.info(
+    "Live demo runs on a shared API key with limited daily calls. "
+    "If AI features stop responding, clone the repo and run locally "
+    "with your own free Gemini API key."
+)
 
 st.set_page_config(page_title="Resume Editor", layout="wide")
 st.title("JobMatch - Resume & Job Description Analyzer")
